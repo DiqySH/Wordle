@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { InputSlot, inputVariants } from "./InputSlot";
 import { useWord } from "./WordProvider";
 import type { VariantProps } from "class-variance-authority";
+import { useComplete } from "./WinProvider";
 
 type SlotValue = string | null;
 
@@ -18,6 +19,7 @@ const InputGroup = ({ length = 5, isActive, onComplete }: Props) => {
   >(Array(length).fill("default"));
   const slotsRef = useRef(slots);
   const { word } = useWord();
+  const { setIsComplete, setIsWin } = useComplete();
 
   const onValidate = () => {
     if (!word) return;
@@ -49,6 +51,11 @@ const InputGroup = ({ length = 5, isActive, onComplete }: Props) => {
       }
     }
     setStyles(updatedStyles);
+
+    if (JSON.stringify(guess) === JSON.stringify(correctWordArray)) {
+      setIsComplete(true);
+      setIsWin(true);
+    }
   };
 
   useEffect(() => {
